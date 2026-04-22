@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toy Store — Service Catalog</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sn-navy: #1a2332;
+    --sn-blue: #0066cc;
+    --sn-blue-hover: #0052a3;
+    --sn-blue-light: #e8f0fb;
+    --sn-green: #00a300;
+    --sn-red: #d9534f;
+    --sn-orange: #f0ab00;
+    --sn-gray-100: #f4f4f4;
+    --sn-gray-200: #e8e8e8;
+    --sn-gray-300: #d8d8d8;
+    --sn-gray-400: #b0b0b0;
+    --sn-gray-500: #767676;
+    --sn-gray-700: #3d3d3d;
+    --sn-gray-900: #1a1a1a;
+    --sn-white: #ffffff;
+    --sn-header-height: 56px;
+    --sn-nav-height: 44px;
+    --font: 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--sn-gray-900);
+    background: var(--sn-gray-100);
+    min-height: 100vh;
+  }
+
+  /* ── TOP HEADER ── */
+  .sn-header {
+    background: var(--sn-navy);
+    height: var(--sn-header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+  }
+  .sn-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: .3px;
+  }
+  .sn-header .logo svg { width: 26px; height: 26px; }
+  .sn-header .logo-sep { color: rgba(255,255,255,.35); font-size: 18px; margin: 0 4px; }
+  .sn-header .logo-app { color: rgba(255,255,255,.75); font-weight: 400; }
+  .sn-header .spacer { flex: 1; }
+  .sn-header .header-actions { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #3d7fc1;
+    color: #fff; font-weight: 600; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  /* ── SUB NAV ── */
+  .sn-subnav {
+    background: #fff;
+    border-bottom: 1px solid var(--sn-gray-300);
+    height: var(--sn-nav-height);
+    display: flex;
+    align-items: stretch;
+    padding: 0 20px;
+  }
+  .sn-subnav a {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    text-decoration: none;
+    color: var(--sn-gray-700);
+    font-size: 13.5px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: color .15s, border-color .15s;
+    cursor: pointer;
+  }
+  .sn-subnav a:hover { color: var(--sn-blue); }
+  .sn-subnav a.active { color: var(--sn-blue); border-bottom-color: var(--sn-blue); }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    background: #fff;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--sn-gray-200);
+    font-size: 12.5px;
+    color: var(--sn-gray-500);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .breadcrumb a { color: var(--sn-blue); text-decoration: none; cursor: pointer; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { color: var(--sn-gray-400); }
+  .breadcrumb .current { color: var(--sn-gray-700); font-weight: 500; }
+
+  /* ── MAIN LAYOUT ── */
+  .page-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* ── CATALOG GRID (home) ── */
+  .catalog-home { display: none; }
+  .catalog-home.active { display: block; }
+
+  .catalog-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--sn-gray-900);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--sn-gray-200);
+  }
+
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .catalog-card {
+    background: #fff;
+    border: 1px solid var(--sn-gray-200);
+    border-radius: 4px;
+    padding: 20px 16px 16px;
+    cursor: pointer;
+    transition: box-shadow .15s, border-color .15s, transform .1s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .catalog-card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+    border-color: var(--sn-blue);
+    transform: translateY(-2px);
+  }
+  .catalog-card .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .card-icon.blue { background: #e3f0ff; }
+  .card-icon.green { background: #e3f9e3; }
+  .catalog-card .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sn-blue);
+    line-height: 1.3;
+  }
+  .catalog-card .card-desc {
+    font-size: 12.5px;
+    color: var(--sn-gray-500);
+    line-height: 1.45;
+  }
+
+  /* ── FORM VIEW ── */
+  .form-view { display: none; }
+  .form-view.active { display: block; }
+
+  .form-header {
+    background: #fff;
+    border: 1px solid var(--sn-gray-200);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .form-header .fh-icon {
+    width: 56px; height: 56px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .form-header .fh-info { flex: 1; }
+  .form-header .fh-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--sn-gray-900);
+    margin-bottom: 4px;
+  }
+  .form-header .fh-desc {
+    font-size: 13px;
+    color: var(--sn-gray-500);
+    line-height: 1.5;
+  }
+
+  /* ── FORM BODY ── */
+  .form-body {
+    background: #fff;
+    border: 1px solid var(--sn-gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .form-section-header {
+    background: var(--sn-gray-100);
+    border-bottom: 1px solid var(--sn-gray-200);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sn-gray-700);
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .form-fields { padding: 8px 0; }
+
+  .form-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--sn-gray-100);
+    gap: 0;
+  }
+  .form-row:last-child { border-bottom: none; }
+
+  .form-label {
+    width: 200px;
+    min-width: 200px;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sn-gray-700);
+    line-height: 1.4;
+  }
+  .form-label .required {
+    color: var(--sn-red);
+    margin-left: 2px;
+    font-size: 11px;
+  }
+
+  .form-control-wrap { flex: 1; }
+
+  .form-control {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--sn-gray-300);
+    border-radius: 3px;
+    font-family: var(--font);
+    font-size: 13.5px;
+    color: var(--sn-gray-900);
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+  }
+  .form-control:focus {
+    border-color: var(--sn-blue);
+    box-shadow: 0 0 0 2px rgba(0,102,204,.18);
+  }
+  textarea.form-control { resize: vertical; min-height: 80px; }
+
+  select.form-control { cursor: pointer; }
+
+  /* toggle / checkbox */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 6px;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 42px; height: 22px;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: var(--sn-gray-300);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; top: 3px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  }
+  .toggle-switch input:checked + .toggle-slider { background: var(--sn-green); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+  .toggle-label { font-size: 13px; color: var(--sn-gray-500); }
+
+  /* date input */
+  input[type="date"].form-control { max-width: 200px; }
+
+  /* reference field */
+  .ref-wrap { position: relative; }
+  .ref-wrap .form-control { padding-right: 36px; }
+  .ref-wrap .ref-icon {
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--sn-gray-400);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  /* helper text */
+  .field-hint {
+    font-size: 11.5px;
+    color: var(--sn-gray-400);
+    margin-top: 4px;
+  }
+
+  /* ── FORM FOOTER ── */
+  .form-footer {
+    background: #fff;
+    border: 1px solid var(--sn-gray-200);
+    border-radius: 4px;
+    margin-top: 16px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 3px;
+    font-family: var(--font);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, box-shadow .1s;
+    outline: none;
+  }
+  .btn-primary {
+    background: var(--sn-blue);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--sn-blue-hover); box-shadow: 0 2px 6px rgba(0,102,204,.4); }
+  .btn-secondary {
+    background: #fff;
+    color: var(--sn-gray-700);
+    border: 1px solid var(--sn-gray-300);
+  }
+  .btn-secondary:hover { background: var(--sn-gray-100); }
+
+  /* ── SUCCESS MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 6px;
+    padding: 32px 36px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,.22);
+    animation: popIn .2s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(.92); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .modal .success-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .modal h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .modal p { font-size: 13.5px; color: var(--sn-gray-500); margin-bottom: 20px; line-height: 1.5; }
+  .modal .req-number {
+    font-family: monospace;
+    font-size: 13px;
+    background: var(--sn-gray-100);
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: var(--sn-blue);
+    font-weight: 600;
+  }
+
+  /* ── VALIDATION ── */
+  .form-control.invalid { border-color: var(--sn-red); }
+  .error-msg {
+    font-size: 11.5px;
+    color: var(--sn-red);
+    margin-top: 3px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .form-row { flex-direction: column; gap: 4px; }
+    .form-label { width: 100%; padding-top: 0; }
+    .form-header { flex-direction: column; }
+    .catalog-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="sn-header">
+  <div class="logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="6" fill="#293e40"/>
+      <path d="M8 10h6v4H8zm10 0h6v4h-6zM8 18h6v4H8zm10 0h6v4h-6z" fill="#7fffd4"/>
+    </svg>
+    ServiceNow
+    <span class="logo-sep">|</span>
+    <span class="logo-app">Toy Store</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="header-actions">
+    <div class="avatar">SA</div>
+  </div>
+</header>
+
+<!-- SUBNAV -->
+<nav class="sn-subnav">
+  <a class="active" onclick="showHome()" id="nav-home">Catálogo</a>
+  <a onclick="showForm('nova-categoria')" id="nav-cat">Nova Categoria</a>
+  <a onclick="showForm('solicitar-brinquedo')" id="nav-sol">Solicitar Brinquedo</a>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <a onclick="showHome()">Catálogo de Serviços</a>
+  <span class="sep">›</span>
+  <span class="current" id="bc-current">Home</span>
+</div>
+
+<!-- MAIN -->
+<div class="page-wrapper">
+
+  <!-- ══════════ HOME ══════════ -->
+  <div class="catalog-home active" id="view-home">
+    <div class="catalog-section-title">🏪 Toy Store — Catálogo de Serviços</div>
+    <div class="catalog-grid">
+      <div class="catalog-card" onclick="showForm('nova-categoria')">
+        <div class="card-icon green">🏷️</div>
+        <div class="card-title">Nova Categoria</div>
+        <div class="card-desc">Cadastre uma nova categoria no catálogo de brinquedos.</div>
+      </div>
+      <div class="catalog-card" onclick="showForm('solicitar-brinquedo')">
+        <div class="card-icon blue">🧸</div>
+        <div class="card-title">Solicitar Brinquedo</div>
+        <div class="card-desc">Abra um pedido de brinquedo com produto, prazo e prioridade.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ FORM 1: NOVA CATEGORIA ══════════ -->
+  <div class="form-view" id="view-nova-categoria">
+
+    <div class="form-header">
+      <div class="fh-icon green" style="background:#e3f9e3;">🏷️</div>
+      <div class="fh-info">
+        <div class="fh-title">Nova Categoria</div>
+        <div class="fh-desc">Utilize este formulário para cadastrar uma nova categoria no Service Catalog do Toy Store. Preencha os campos obrigatórios e envie a solicitação.</div>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <div class="form-section-header">Informações da Categoria</div>
+      <div class="form-fields">
+
+        <!-- Categoria -->
+        <div class="form-row">
+          <div class="form-label">Categoria <span class="required">*</span></div>
+          <div class="form-control-wrap">
+            <select class="form-control" id="cat-categoria" onchange="clearInvalid(this)">
+              <option value="">-- Selecione --</option>
+              <option>Ação</option>
+              <option>Educativo</option>
+              <option>Eletrônico</option>
+              <option>Esporte</option>
+              <option>Pelúcia</option>
+              <option>Quebra-cabeça</option>
+              <option>Outro</option>
+            </select>
+            <div class="error-msg" id="err-cat-categoria">Campo obrigatório.</div>
+          </div>
+        </div>
+
+        <!-- Cadastro Urgente -->
+        <div class="form-row">
+          <div class="form-label">Cadastro é urgente? <span class="required">*</span></div>
+          <div class="form-control-wrap">
+            <div class="toggle-wrap">
+              <label class="toggle-switch">
+                <input type="checkbox" id="cat-urgente">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label" id="urgente-label">Não</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Receber retorno -->
+        <div class="form-row">
+          <div class="form-label">Receber retorno?</div>
+          <div class="form-control-wrap">
+            <div class="toggle-wrap">
+              <label class="toggle-switch">
+                <input type="checkbox" id="cat-retorno">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label" id="retorno-label">Não</span>
+            </div>
+            <div class="field-hint">Marque essa opção para saber a conclusão</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn btn-primary" onclick="submitForm('nova-categoria')">Enviar</button>
+      <button class="btn btn-secondary" onclick="showHome()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ══════════ FORM 2: SOLICITAR BRINQUEDO ══════════ -->
+  <div class="form-view" id="view-solicitar-brinquedo">
+
+    <div class="form-header">
+      <div class="fh-icon blue" style="background:#e3f0ff;">🧸</div>
+      <div class="fh-info">
+        <div class="fh-title">Solicitar Brinquedo</div>
+        <div class="fh-desc">Use este formulário para abrir um pedido de brinquedo. Informe o produto desejado, a data de entrega e a prioridade da solicitação.</div>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <div class="form-section-header">Detalhes do Pedido</div>
+      <div class="form-fields">
+
+        <!-- Produto -->
+        <div class="form-row">
+          <div class="form-label">Produto <span class="required">*</span></div>
+          <div class="form-control-wrap">
+            <div class="ref-wrap">
+              <select class="form-control" id="sol-produto" onchange="clearInvalid(this)">
+                <option value="">-- Selecione --</option>
+                <option>LEGO Classic</option>
+                <option>Barbie Fashionista</option>
+                <option>Hot Wheels Track</option>
+                <option>Quebra-cabeça 500pç</option>
+                <option>Pelúcia Urso</option>
+                <option>Drone Infantil</option>
+                <option>Jogo de Tabuleiro</option>
+              </select>
+              <span class="ref-icon">🔍</span>
+            </div>
+            <div class="error-msg" id="err-sol-produto">Campo obrigatório.</div>
+          </div>
+        </div>
+
+        <!-- Data da entrega -->
+        <div class="form-row">
+          <div class="form-label">Data da entrega <span class="required">*</span></div>
+          <div class="form-control-wrap">
+            <input type="date" class="form-control" id="sol-data" onchange="clearInvalid(this)">
+            <div class="error-msg" id="err-sol-data">Campo obrigatório.</div>
+          </div>
+        </div>
+
+        <!-- Comentários adicionais -->
+        <div class="form-row">
+          <div class="form-label">Comentários adicionais</div>
+          <div class="form-control-wrap">
+            <textarea class="form-control" id="sol-comentarios" placeholder="Adicione observações relevantes para o pedido..."></textarea>
+          </div>
+        </div>
+
+        <!-- Nome -->
+        <div class="form-row">
+          <div class="form-label">Digite seu nome <span class="required">*</span></div>
+          <div class="form-control-wrap">
+            <input type="text" class="form-control" id="sol-nome" placeholder="Nome completo" onchange="clearInvalid(this)" oninput="clearInvalid(this)">
+            <div class="error-msg" id="err-sol-nome">Campo obrigatório.</div>
+          </div>
+        </div>
+
+        <!-- Prioridade -->
+        <div class="form-row">
+          <div class="form-label">Prioridade</div>
+          <div class="form-control-wrap">
+            <select class="form-control" id="sol-prioridade">
+              <option value="">-- Nenhuma --</option>
+              <option value="1">1 - Crítica</option>
+              <option value="2">2 - Alta</option>
+              <option value="3">3 - Moderada</option>
+              <option value="4">4 - Baixa</option>
+              <option value="5">5 - Planejamento</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn btn-primary" onclick="submitForm('solicitar-brinquedo')">Enviar</button>
+      <button class="btn btn-secondary" onclick="showHome()">Cancelar</button>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <span class="success-icon">✅</span>
+    <h3>Solicitação Enviada!</h3>
+    <p id="modal-msg">Sua solicitação foi registrada com sucesso no Service Catalog.</p>
+    <p style="margin-bottom:16px;">Número do registro: <span class="req-number" id="req-number">REQ0001234</span></p>
+    <button class="btn btn-primary" onclick="closeModal()">OK</button>
+  </div>
+</div>
+
+<script>
+  // ── NAVIGATION ──
+  function showHome() {
+    document.querySelectorAll('.form-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-home').classList.add('active');
+    document.querySelectorAll('.catalog-home').forEach(v => v.classList.add('active'));
+    setNav('home');
+    setBreadcrumb('Home');
+  }
+
+  function showForm(id) {
+    document.getElementById('view-home').classList.remove('active');
+    document.querySelectorAll('.form-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + id).classList.add('active');
+    setNav(id);
+    const titles = {
+      'nova-categoria': 'Nova Categoria',
+      'solicitar-brinquedo': 'Solicitar Brinquedo'
+    };
+    setBreadcrumb(titles[id] || id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setNav(active) {
+    const map = {
+      'home': 'nav-home',
+      'nova-categoria': 'nav-cat',
+      'solicitar-brinquedo': 'nav-sol'
+    };
+    document.querySelectorAll('.sn-subnav a').forEach(a => a.classList.remove('active'));
+    if (map[active]) document.getElementById(map[active]).classList.add('active');
+  }
+
+  function setBreadcrumb(current) {
+    document.getElementById('bc-current').textContent = current;
+  }
+
+  // ── TOGGLE LABELS ──
+  document.getElementById('cat-urgente').addEventListener('change', function() {
+    document.getElementById('urgente-label').textContent = this.checked ? 'Sim' : 'Não';
+  });
+  document.getElementById('cat-retorno').addEventListener('change', function() {
+    document.getElementById('retorno-label').textContent = this.checked ? 'Sim' : 'Não';
+  });
+
+  // ── VALIDATION ──
+  function clearInvalid(el) {
+    el.classList.remove('invalid');
+    const errId = 'err-' + el.id;
+    const errEl = document.getElementById(errId);
+    if (errEl) errEl.classList.remove('show');
+  }
+
+  function validateField(id) {
+    const el = document.getElementById(id);
+    if (!el) return true;
+    const val = el.value.trim();
+    if (!val) {
+      el.classList.add('invalid');
+      const errEl = document.getElementById('err-' + id);
+      if (errEl) errEl.classList.add('show');
+      return false;
+    }
+    return true;
+  }
+
+  // ── SUBMIT ──
+  function submitForm(form) {
+    let valid = true;
+
+    if (form === 'nova-categoria') {
+      valid = validateField('cat-categoria');
+    }
+
+    if (form === 'solicitar-brinquedo') {
+      const a = validateField('sol-produto');
+      const b = validateField('sol-data');
+      const c = validateField('sol-nome');
+      valid = a && b && c;
+    }
+
+    if (!valid) return;
+
+    const reqNum = 'REQ' + String(Math.floor(Math.random() * 9000000) + 1000000);
+    const msgs = {
+      'nova-categoria': 'A nova categoria foi cadastrada com sucesso no Service Catalog do Toy Store.',
+      'solicitar-brinquedo': 'Seu pedido de brinquedo foi registrado e está aguardando processamento.'
+    };
+
+    document.getElementById('req-number').textContent = reqNum;
+    document.getElementById('modal-msg').textContent = msgs[form] || 'Solicitação enviada com sucesso.';
+    document.getElementById('modal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    showHome();
+    // reset forms
+    document.querySelectorAll('.form-control').forEach(el => {
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+      el.classList.remove('invalid');
+    });
+    document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+    document.getElementById('urgente-label').textContent = 'Não';
+    document.getElementById('retorno-label').textContent = 'Não';
+  }
+
+  // close modal on overlay click
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>
