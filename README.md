@@ -1,10 +1,8 @@
 # 🧸 Toy Store — ServiceNow App
 
-Aplicação desenvolvida na plataforma **ServiceNow** simulando um catálogo de serviços de uma loja de brinquedos. O projeto contempla cadastro de categorias, solicitação de produtos com campos personalizados e automação de notificação por e-mail via Flow Designer.
+Aplicação desenvolvida na plataforma ServiceNow simulando um catálogo de serviços de uma loja de brinquedos. O projeto contempla cadastro de categorias, solicitação de produtos com campos personalizados e automação de notificação por e-mail via Flow Designer.
 
-> 💡 Uma versão estática da interface foi recriada em HTML puro e está disponível neste repositório para visualização sem necessidade de acesso ao ServiceNow.
 
-\---
 
 ## 📌 Funcionalidades
 
