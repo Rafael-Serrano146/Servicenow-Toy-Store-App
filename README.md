@@ -65,18 +65,6 @@ Abra o arquivo `toy-store.html` diretamente no navegador ou acesse via GitHub Pa
 
 ---
 
-# Screenshots
-
-> Adicione prints da aplicação rodando no ServiceNow
-
----
-
-# Demonstração
-
-> Adicione aqui o link do vídeo demonstrando o funcionamento
-
----
-
 # Objetivo
 
 Projeto desenvolvido para prática e aprendizado da plataforma ServiceNow, explorando:
