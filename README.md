@@ -2,11 +2,9 @@
 
 Aplicação desenvolvida na plataforma **ServiceNow** simulando um catálogo de serviços de uma loja de brinquedos. O projeto contempla cadastro de categorias, solicitação de produtos com campos personalizados e automação de notificação por e-mail via Flow Designer.
 
-> Uma versão estática da interface foi recriada em HTML puro e está disponível neste repositório para visualização sem necessidade de acesso ao ServiceNow.
 
----
 
-## Funcionalidades
+# Funcionalidades
 
 - Cadastro de novas categorias de brinquedos no Service Catalog
 - Solicitação de brinquedos com produto, data de entrega, nome do solicitante, prioridade e comentários
@@ -16,7 +14,7 @@ Aplicação desenvolvida na plataforma **ServiceNow** simulando um catálogo de 
 
 ---
 
-## Tecnologias Utilizadas
+# Tecnologias Utilizadas
 
 | Tecnologia | Uso |
 |---|---|
@@ -27,22 +25,20 @@ Aplicação desenvolvida na plataforma **ServiceNow** simulando um catálogo de 
 
 ---
 
-## Estrutura do Repositório
+# Estrutura do Repositório
 
 ```
 toy-store/
 ├── update-sets/
 │   ├── sys_remote_update_set_nova_categoria.xml
 │   └── sys_remote_update_set_solicitar_brinquedo.xml
-├── screenshots/
-│   └── (adicione prints aqui)
-├── toy-store.html        ← interface recriada em HTML
+├── toy-store.html  ← interface recriada em HTML
 └── README.md
 ```
 
 ---
 
-## Automação — Flow Designer
+# Automação — Flow Designer
 
 O fluxo implementado funciona da seguinte forma:
 
@@ -52,7 +48,7 @@ O fluxo implementado funciona da seguinte forma:
 
 ---
 
-## Como Importar no ServiceNow (PDI)
+# Como Importar no ServiceNow (PDI)
 
 1. Acesse sua instância em `developer.servicenow.com`
 2. Navegue até **System Update Sets → Retrieved Update Sets**
@@ -63,25 +59,25 @@ O fluxo implementado funciona da seguinte forma:
 
 ---
 
-## Visualizar a Interface (sem ServiceNow)
+# Visualizar a Interface (sem ServiceNow)
 
 Abra o arquivo `toy-store.html` diretamente no navegador ou acesse via GitHub Pages para visualizar a interface recriada com HTML, CSS e JavaScript puro, sem necessidade de conta ou instância ServiceNow.
 
 ---
 
-## Screenshots
+# Screenshots
 
 > Adicione prints da aplicação rodando no ServiceNow
 
 ---
 
-## Demonstração
+# Demonstração
 
 > Adicione aqui o link do vídeo demonstrando o funcionamento
 
 ---
 
-## Objetivo
+# Objetivo
 
 Projeto desenvolvido para prática e aprendizado da plataforma ServiceNow, explorando:
 
