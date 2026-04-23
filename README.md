@@ -2,7 +2,6 @@
 
 Protótipo navegável que reproduz a identidade visual do **ServiceNow Studio** para a aplicação **Toy Store**, construído a partir dos dois update sets exportados (XML) e dos screenshots do ambiente original.
 
-![preview](preview.png)
 
 ## O que está incluído
 
